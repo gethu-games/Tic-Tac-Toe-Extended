@@ -47,6 +47,8 @@ public:
 
     UI                              *ui;
 
+    State                           *s;
+
     
     /**********************
      *** GAME FUNCTIONS ***

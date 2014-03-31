@@ -23,8 +23,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
     //auto screenSize = EGLView::getInstance()->getFrameSize();
-    //auto designSize = Size(640, 960);
-    //eglView->setDesignResolutionSize(designSize.width, designSize.height, ResolutionPolicy::NO_BORDER);
+    auto designSize = Size(640, 1136);
+    glview->setDesignResolutionSize(designSize.width, designSize.height, ResolutionPolicy::NO_BORDER);
 	
     // turn on display FPS
     director->setDisplayStats(true);

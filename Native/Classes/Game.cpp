@@ -27,7 +27,6 @@ USING_NS_CC;
  **********************/
 
 void Game::aiMove(float dt) {
-    State *s                    =   State::getShared();
     Logic::getShared()->aiMove();
 
     s->state                    =   GameStateP1Move;
@@ -78,8 +77,11 @@ bool Game::onTouchBegan(Touch* touch, Event* event) {
 }
 
 void Game::onTouchEnded(Touch* touch, Event* event) {
-    State *s                    =   State::getShared();
     auto location               =   touch->getLocation();
+
+    if (!(s->state == GameStateWaitingForP1 || s->state == GameStateWaitingForP2)) {
+        return;
+    }
 
     auto tile                   =   board->convertScreenPixelToTile(location);
 
@@ -87,12 +89,12 @@ void Game::onTouchEnded(Touch* touch, Event* event) {
         if (s->tiles[(int)tile.x][(int)tile.y] == TileStateNone) {
             s->selectedTileX    =   tile.x;
             s->selectedTileY    =   tile.y;
-            if ( s->state == GameStateP1Move) {
-                s->state        =   GameStateP2Move;
+            if ( s->state == GameStateWaitingForP1) {
+                s->state        =   GameStateP1Move;
                 s->tiles[(int)tile.x][(int)tile.y] = TileStateX;
                 board->drawXAt(tile);
-            } else {
-                s->state        =   GameStateP1Move;
+            } else if (s->state == GameStateWaitingForP2) {
+                s->state        =   GameStateP2Move;
                 s->tiles[(int)tile.x][(int)tile.y] = TileStateO;
                 board->drawOAt(tile);
             }
@@ -105,9 +107,11 @@ void Game::onTouchEnded(Touch* touch, Event* event) {
 
             s->printTilesState();
 
+            /*
             if (true) {
                 this->scheduleOnce(schedule_selector(Game::aiMove), 2);
             }
+            */
         }
     }
 
@@ -118,12 +122,12 @@ void Game::menuCloseCallback(Object* pSender) {
     board                       =   Board::create();
     board->setPosition(Point(0, 0));
     this->addChild(board);
+    s->state                    =   GameStateDrawBoard;
+    s->reset();
 }
 
 // on "init" you need to initialize your instance
 bool Game::init() {
-
-    State                           *s;
 
     if ( !Layer::init() ) {
         return false;
@@ -132,11 +136,13 @@ bool Game::init() {
     visibleSize                 =   Director::getInstance()->getVisibleSize();
     Point origin                =   Director::getInstance()->getVisibleOrigin();
     s                           =   State::getShared();
-    s->state                    =   GameStateP1Move;
+    s->state                    =   GameStateDrawBoard;
 
     board                       =   Board::create();
     board->setPosition(Point(0, 0));
     this->addChild(board);
+
+    CCLog("Visible Size %f %f", visibleSize.width, visibleSize.height);
 
     ui                          =   UI::create();
     this->addChild(ui);

@@ -200,9 +200,9 @@ void Logic::aiMove() {
     // checking consecutive tiles in current row from left to right
     for (int i = 0; i < c->rowCount; i++) {
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int  j = 0; j < c->colCount; j++) {
-            if(s->tiles[i][j] == -1) {
+            if(s->tiles[i][j] == 0) {
                 scoreTile[i][j] += weight;
                 weight = 0;
             } else if(s->tiles[i][j] == oldID) {
@@ -218,9 +218,9 @@ void Logic::aiMove() {
     // checking consecutive tiles in current row from right to left
     for (int i = 0; i < c->rowCount; i++) {
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int  j = c->colCount - 1; j >= 0; j--) {
-            if(s->tiles[i][j] == -1) {
+            if(s->tiles[i][j] == 0) {
                 //if (scoreTile[i][j] < weight)
                 scoreTile[i][j] += weight;
                 weight = 0;
@@ -237,9 +237,9 @@ void Logic::aiMove() {
     // checking consecutive tiles in current col from top to bottom
     for (int  j = 0; j < c->colCount; j++) {
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int i = 0; i < c->rowCount; i++) {
-            if(s->tiles[i][j] == -1) {
+            if(s->tiles[i][j] == 0) {
                 //if (scoreTile[i][j] < weight)
                 scoreTile[i][j] += weight;
                 weight = 0;
@@ -255,9 +255,9 @@ void Logic::aiMove() {
     // checking consecutive tiles in current col from bottom to top
     for (int  j = 0; j < c->colCount; j++) {
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int i = c->rowCount - 1; i >= 0; i--) {
-            if(s->tiles[i][j] == -1) {
+            if(s->tiles[i][j] == 0) {
                 //if (scoreTile[i][j] < weight)
                 scoreTile[i][j] += weight;
                 weight = 0;
@@ -275,10 +275,10 @@ void Logic::aiMove() {
     for (int i = 0; i < c->rowCount; i++) {
         int k = i;
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int  j = 0; j < c->colCount && k < c->rowCount; j++)
         {
-            if(s->tiles[k][j] == -1) {
+            if(s->tiles[k][j] == 0) {
                 //if (scoreTile[k][j] < weight)
                 scoreTile[k][j] += weight;
                 weight = 0;
@@ -298,9 +298,9 @@ void Logic::aiMove() {
     for (int j = 1; j < c->colCount; j++) {
         int k = j;
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int  i = 0; i < c->rowCount && k < c->colCount; i++) {
-            if(s->tiles[i][k] == -1) {
+            if(s->tiles[i][k] == 0) {
                 //if (scoreTile[i][k] < weight)
                 scoreTile[i][k] += weight;
                 weight = 0;
@@ -323,10 +323,10 @@ void Logic::aiMove() {
     {
         int k = i;
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int  j = c->colCount - 1; j >= 0 && k >= 0; j--)
         {
-            if(s->tiles[k][j] == -1) {
+            if(s->tiles[k][j] == 0) {
                 //if (scoreTile[k][j] < weight)
                 {
                     scoreTile[k][j] += weight;
@@ -349,10 +349,10 @@ void Logic::aiMove() {
     {
         int k = j;
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int  i = c->rowCount - 1; i >= 0 && k >= 0; i--)
         {
-            if(s->tiles[i][k] == -1) {
+            if(s->tiles[i][k] == 0) {
                 //if (scoreTile[i][k] < weight)
                 {
                     scoreTile[i][k] += weight;
@@ -377,10 +377,10 @@ void Logic::aiMove() {
     {
         int k = i;
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int  j = c->colCount - 1; j >= 0 && k < c->rowCount; j--)
         {
-            if(s->tiles[k][j] == -1) {
+            if(s->tiles[k][j] == 0) {
                 //if (scoreTile[k][j] < weight)
                     scoreTile[k][j] += weight;
                 weight = 0;
@@ -401,10 +401,10 @@ void Logic::aiMove() {
     {
         int k = j;
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int  i = 0; i < c->rowCount && k > 0; i++)
         {
-            if(s->tiles[i][k] == -1) {
+            if(s->tiles[i][k] == 0) {
                 //if (scoreTile[i][k] < weight)
                     scoreTile[i][k] += weight;
                 weight = 0;
@@ -427,10 +427,10 @@ void Logic::aiMove() {
     {
         int k = i;
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int  j = 0; j < c->colCount && k >= 0; j++)
         {
-            if(s->tiles[k][j] == -1) {
+            if(s->tiles[k][j] == 0) {
                 //if (scoreTile[k][j] < weight)
                 {
                     scoreTile[k][j] += weight;
@@ -453,10 +453,10 @@ void Logic::aiMove() {
     {
         int k = j;
         weight = 0;
-        oldID = -1;
+        oldID = 0;
         for (int  i = c->rowCount - 1; i >= 0 && k >= 0; i--)
         {
-            if(s->tiles[i][k] == -1) {
+            if(s->tiles[i][k] == 0) {
                 //if (scoreTile[i][k] < weight)
                 {
                     scoreTile[i][k] += weight;
@@ -478,6 +478,18 @@ void Logic::aiMove() {
     int bestTileI = 0;
     int bestTileJ = 0;
 
+
+    char buff[100] = "";
+
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            //CCLog("%d %d", i, j);
+            sprintf(buff, "%s %d", buff, (int)scoreTile[i][j]);
+        }
+        CCLog("%s", buff);
+        sprintf(buff, "");
+    }
+
     //console.log('score tile');
     for (int i = 0; i < c->rowCount; i++) {
         //int str = '';
@@ -495,6 +507,8 @@ void Logic::aiMove() {
     s->aiTileY = bestTileJ;
     s->selectedTileX = bestTileI;
     s->selectedTileY = bestTileJ;
+
+    CCLog("Selected Tile: %d %d", bestTileI, bestTileJ);
 
 }
 

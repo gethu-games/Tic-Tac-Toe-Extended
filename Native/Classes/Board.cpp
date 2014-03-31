@@ -67,6 +67,7 @@ void Board::updateGridDraw(float dt) {
             if (hLineIndex != -1) {
                 currentLinePercent= -0.01;
             } else {
+                State::getShared()->state = GameStateWaitingForP1;
                 this->unschedule(schedule_selector(Board::updateGridDraw));
             }
         }
@@ -85,7 +86,7 @@ void Board::drawXAt(Point tile) {
 void Board::updateXDraw(float dt) {
 
     Point                           pt;
-    currentLinePercent          +=  dt * drawSpeed / 4;
+    currentLinePercent          +=  0.01 * drawSpeed / 4;
 
     if (currentLinePercent < 0.5)
         pt                      =   Point( (currentTileToDraw.y + 0.2) * cellSize.width + currentLinePercent * cellSize.width * 1.2,
@@ -97,6 +98,7 @@ void Board::updateXDraw(float dt) {
     this->drawBrushAtPoint(pt, true, 1, Color3B::YELLOW);
 
     if (currentLinePercent > 1.0) {
+        State::getShared()->state=  GameStateWaitingForP2;
         this->unschedule(schedule_selector(Board::updateXDraw));
     }
 
@@ -115,7 +117,7 @@ void Board::updateODraw(float dt) {
 
     Point                           pt, center;
     float                           r = cellSize.width * 0.3;
-    currentLinePercent          +=  dt * drawSpeed / 4;
+    currentLinePercent          +=  0.01 * drawSpeed / 4;
 
     center                      =   Point((currentTileToDraw.y + 0.5f) * cellSize.width, (currentTileToDraw.x + 0.5f) * cellSize.height);
     r                           =   cellSize.width * (0.3 - (currentLinePercent - 1.25) * variant1);
@@ -125,6 +127,7 @@ void Board::updateODraw(float dt) {
     this->drawBrushAtPoint(pt, true, 1, Color3B::GREEN);
 
     if (currentLinePercent > 1.7) {
+        State::getShared()->state=  GameStateWaitingForP1;
         this->unschedule(schedule_selector(Board::updateODraw));
     }
 

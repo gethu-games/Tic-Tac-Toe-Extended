@@ -24,6 +24,7 @@ along with Tic Tac Toe Extended.  If not, see <http://www.gnu.org/licenses/>.
 using namespace cocos2d;
 
 typedef enum {
+    GameStateDrawBoard,
     GameStateWaitingForP1,
     GameStateP1Move,
     GameStateWaitingForP2,
