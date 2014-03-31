@@ -11,9 +11,6 @@
 # Generated files
 bin/
 gen/
-libs/
-obj/
-assets/
 
 # Gradle files
 .gradle/
