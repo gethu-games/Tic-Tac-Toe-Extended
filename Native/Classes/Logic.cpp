@@ -39,7 +39,6 @@ void Logic::calculateScore() {
     p1                          =   0;
     p2                          =   0;
     block                       =   c->scoreTile;
-    s->highlightTiles           =   PointArray::create(10);
 
     for (int i = 0; i < c->rowCount; i++) {
         for (int j = 0; j < c->colCount; j++) {

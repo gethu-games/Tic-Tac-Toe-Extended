@@ -41,7 +41,7 @@ public:
 
     int                             vLineIndex, hLineIndex;
 
-    float                           currentLinePercent;
+    float                           currentLinePercent, strikePercent;
 
     Point                           currentTileToDraw;
 
@@ -51,7 +51,7 @@ public:
 
     int                             lineThickness = 1;
 
-    Point                           offset;
+    Point                           offset, erasePoint;
 
     Size                            cellSize;
 
@@ -77,6 +77,8 @@ public:
 
     Sprite                          *chalkBrush;
 
+    Sprite                          *duster;
+
     RenderTexture                   *texture;
 
 
@@ -97,11 +99,19 @@ public:
 
     void                            updateODraw(float dt);
 
-    void                            drawBrushAtPoint(Point pt, bool vertical, int density, Color3B color = Color3B::WHITE);
-
     void                            strikeOutTiles(float dt);
 
     void                            updateStrikeDraw(float dt);
+
+    void                            eraseBoard(float dt);
+
+    void                            updateErase(float dt);
+
+    void                            drawBrushAtPoint(Point pt, bool vertical, int density, Color3B color = Color3B::WHITE);
+
+    void                            eraseBrushAtPoint(Point pt);
+
+    void                            rescheduleNextStrike();
 
     // returns tile index of touched Point
     // return {-1, -1} if touched outside the grid

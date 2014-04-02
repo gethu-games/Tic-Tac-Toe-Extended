@@ -29,6 +29,8 @@ USING_NS_CC;
 
 void Board::drawBoard(float dt) {
 
+    CCLog("DRAW BOARD");
+
     vLineIndex                  =   0;
     hLineIndex                  =   -1;
     currentLinePercent          =   1.025;
@@ -42,7 +44,7 @@ void Board::updateGridDraw(float dt) {
         currentLinePercent      -=  0.01 * drawSpeed;
         if (currentLinePercent < 0.08) currentLinePercent = 0.079;
         Point to                =   Point(vLineIndex * cellSize.width, currentLinePercent * boardSpace.height);
-        this->drawBrushAtPoint(to, true, 30);
+        this->drawBrushAtPoint(to, true, 12);
 
         if (currentLinePercent < 0.08) {
             vLineIndex++;
@@ -60,7 +62,7 @@ void Board::updateGridDraw(float dt) {
         currentLinePercent      +=  0.01 * drawSpeed;
         if (currentLinePercent > 0.93) currentLinePercent = 0.931;
         Point to                =   Point(currentLinePercent * boardSpace.width, hLineIndex * cellSize.height);
-        this->drawBrushAtPoint(to, false, 30);
+        this->drawBrushAtPoint(to, false, 12);
 
         if (currentLinePercent > 0.93) {
             hLineIndex--;
@@ -134,6 +136,98 @@ void Board::updateODraw(float dt) {
 
 }
 
+void Board::strikeOutTiles(float dt) {
+    PointArray  *ptArray        =   State::getShared()->highlightTiles;
+
+    /*for (int i = 0; i < ptArray->count(); i++) {
+        CCLog("pt %d %f %f", i, ptArray->getControlPointAtIndex(i).x, ptArray->getControlPointAtIndex(i).y );
+    }*/
+
+    strikeFrom                  =   ptArray->getControlPointAtIndex(0);
+    //CCLog("from tile %f %f", strikeFrom.x, strikeFrom.y);
+    strikeFrom                  =   Point((strikeFrom.y + 0.5) * cellSize.width, (strikeFrom.x + 0.5) * cellSize.height);
+    //CCLog("from pixel %f %f", strikeFrom.x, strikeFrom.y);
+
+    strikeTo                    =   ptArray->getControlPointAtIndex(1);
+    //CCLog("to tile %f %f", strikeTo.x, strikeTo.y);
+    strikeTo                    =   Point((strikeTo.y + 0.5) * cellSize.width, (strikeTo.x + 0.5) * cellSize.height);
+    //CCLog("to pixel %f %f", strikeTo.x, strikeTo.y);
+
+    strikePercent               =   0;
+    this->schedule(schedule_selector(Board::updateStrikeDraw));
+
+    ptArray->removeControlPointAtIndex(0);
+    ptArray->removeControlPointAtIndex(0);
+    
+    if (ptArray->count() > 0) {
+        this->runAction(Sequence::create(DelayTime::create(0.25f),
+                    CallFunc::create(this, callfunc_selector(Board::rescheduleNextStrike)),
+                    NULL));
+    }
+
+}
+
+void Board::updateStrikeDraw(float dt) {
+
+    float                           dx, dy;
+    Point                           pt;
+    strikePercent               +=  0.02 * drawSpeed / 4;
+
+    dx                          =   strikeTo.x - strikeFrom.x;
+    dy                          =   strikeTo.y - strikeFrom.y;
+    pt                          =   strikeFrom + Point(dx * strikePercent, dy * strikePercent);
+    this->drawBrushAtPoint(pt, true, 3, Color3B::BLACK);
+    this->drawBrushAtPoint(pt, false, 3, Color3B::BLACK);
+
+    if (strikePercent > 1.0) {
+        this->unschedule(schedule_selector(Board::updateStrikeDraw));
+    }
+
+}
+
+void Board::eraseBoard(float dt) {
+
+    CCLog("BOARD :: ERASE BOARD");
+
+    State::getShared()->state   =   GameStateWipeBoard;
+    currentLinePercent          =   0.0;
+    erasePoint                  =   Point(boardSpace.width * 0.5, boardSpace.height * 0.5);
+    variant1                    =   20 * (2 + rand() % 4);
+    variant2                    =   4 * (2 + rand() % 4);
+    this->schedule(schedule_selector(Board::updateErase));
+
+    CCLog("var1 %f, var2 %f", variant1, variant2);
+
+}
+
+void Board::updateErase(float dt) {
+
+
+    currentLinePercent          +=  0.1f;
+    erasePoint                  +=  Point(variant1, variant2);
+
+    if (erasePoint.x < -boardSpace.width * 0.1f || erasePoint.x > boardSpace.width * 1.1f) {
+        float rnd               =   1 + (rand() % 10) / 1000.0;
+        variant1                *=  -1 * rnd;
+        erasePoint              +=  Point(variant1, 0);
+    }
+
+    if (erasePoint.y < -boardSpace.height * 0.1f || erasePoint.y > boardSpace.height * 1.1f) {
+        float rnd               =   1 + (rand() % 10) / 1000.0;
+        variant2                *=  -1 * rnd;
+        erasePoint              +=  Point(0, variant2);
+    }
+
+    this->eraseBrushAtPoint(erasePoint);
+
+    if (currentLinePercent > 10.0) {
+        CCLog("Erasing Done");
+        State::getShared()->state=  GameStateDrawBoard;
+        this->unschedule(schedule_selector(Board::updateErase));
+        this->scheduleOnce(schedule_selector(Board::drawBoard), 0.25);
+    }
+
+}
 
 // TODO: Yet to test in different screens size and varying FPS and probably need
 // to calculate the density value dynamically
@@ -149,9 +243,9 @@ void Board::drawBrushAtPoint(Point pt, bool vertical, int density, Color3B color
         chalkBrush->setColor(color);
         chalkBrush->setRotation(std::rand() % 180);
         if (vertical) {
-            chalkBrush->setPosition(offset + pt + Point(0, 3 * (i - density * 0.5)));
+            chalkBrush->setPosition(offset + pt + Point(0, 4 * (i - density * 0.5)));
         } else {
-            chalkBrush->setPosition(offset + pt + Point(3 * (i - density * 0.5), 0));
+            chalkBrush->setPosition(offset + pt + Point(4 * (i - density * 0.5), 0));
         }
         chalkBrush->visit();
     }
@@ -160,47 +254,30 @@ void Board::drawBrushAtPoint(Point pt, bool vertical, int density, Color3B color
 
 }
 
-void Board::strikeOutTiles(float dt) {
-    PointArray  *ptArray        =   State::getShared()->highlightTiles;
+// TODO: Yet to test in different screens size and varying FPS and probably need
+// to calculate the density value dynamically
+void Board::eraseBrushAtPoint(Point pt) {
 
-    for (int i = 0; i < ptArray->count(); i++) {
-        CCLog("pt %d %f %f", i, ptArray->getControlPointAtIndex(i).x, ptArray->getControlPointAtIndex(i).y );
-    }
-
-    strikeFrom                  =   ptArray->getControlPointAtIndex(0);
-    CCLog("from tile %f %f", strikeFrom.x, strikeFrom.y);
-    strikeFrom                  =   Point((strikeFrom.y + 0.5) * cellSize.width, (strikeFrom.x + 0.5) * cellSize.height);
-    CCLog("from pixel %f %f", strikeFrom.x, strikeFrom.y);
-
-    strikeTo                    =   ptArray->getControlPointAtIndex(1);
-    CCLog("to tile %f %f", strikeTo.x, strikeTo.y);
-    strikeTo                    =   Point((strikeTo.y + 0.5) * cellSize.width, (strikeTo.x + 0.5) * cellSize.height);
-    CCLog("to pixel %f %f", strikeTo.x, strikeTo.y);
-
-    currentLinePercent          =   0;
-    this->schedule(schedule_selector(Board::updateStrikeDraw));
-
-    State::getShared()->highlightTiles->release();
-    State::getShared()->highlightTiles = NULL;
+    texture->begin();
+    // calling multiple visit()'s of a single sprite renders only the last visit() call
+    // a new Sprite is required for each instance of the brush
+    // This was only in cocos2dx 3.0
+    // http://www.cocos2d-x.org/forums/6/topics/43886?r=43899
+    chalkBrush                  =   Sprite::create("chalkBrush.png");
+    chalkBrush->setScale(40.0);
+    chalkBrush->setRotation(std::rand() % 180);
+    chalkBrush->setPosition(offset + pt);
+    chalkBrush->setOpacity(200);
+    BlendFunc blendVar          =   { GL_ZERO,GL_ONE_MINUS_SRC_ALPHA };
+    chalkBrush->setBlendFunc( blendVar );
+    chalkBrush->visit();
+    texture->end();
+    duster->setPosition(offset + pt + Point(duster->getContentSize().width * 0.3, duster->getContentSize().height * 0.2));
 
 }
 
-void Board::updateStrikeDraw(float dt) {
-
-    float                           dx, dy;
-    Point                           pt;
-    currentLinePercent          +=  dt * drawSpeed / 4;
-
-    dx                          =   strikeTo.x - strikeFrom.x;
-    dy                          =   strikeTo.y - strikeFrom.y;
-    pt                          =   strikeFrom + Point(dx * currentLinePercent, dy * currentLinePercent);
-    this->drawBrushAtPoint(pt, true, 3, Color3B::WHITE);
-    this->drawBrushAtPoint(pt, false, 3, Color3B::WHITE);
-
-    if (currentLinePercent > 1.0) {
-        this->unschedule(schedule_selector(Board::updateStrikeDraw));
-    }
-
+void Board::rescheduleNextStrike() {
+    this->scheduleOnce(schedule_selector(Board::strikeOutTiles), 0.5f);
 }
 
 Point Board::convertScreenPixelToTile(Point globalPixel) { Point                           tileIndex;
@@ -261,10 +338,16 @@ bool Board::init() {
     chalkBrush                  =   Sprite::create("chalkBrush.png");
     chalkBrush->retain();
 
+    duster                      =   Sprite::create("duster.png");
+    duster->setScale(0.5f);
+    this->addChild(duster);
+
     this->scheduleOnce(schedule_selector(Board::drawBoard), 0.5);
 
     return true;
 }
 
 Board::~Board() {
+    chalkBrush->release();
+    duster->release();
 }

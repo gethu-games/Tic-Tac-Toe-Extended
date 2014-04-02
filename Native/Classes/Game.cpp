@@ -39,7 +39,6 @@ void Game::aiMove(float dt) {
     ui->updateUI();
 
     if (s->highlightTiles->count() > 0) {
-        s->highlightTiles->retain();
         board->scheduleOnce(schedule_selector(Board::strikeOutTiles), 1);
     }
 
@@ -105,7 +104,7 @@ void Game::onTouchEnded(Touch* touch, Event* event) {
                 board->scheduleOnce(schedule_selector(Board::strikeOutTiles), 1);
             }
 
-            s->printTilesState();
+            //s->printTilesState();
 
             /*
             if (true) {
@@ -118,11 +117,14 @@ void Game::onTouchEnded(Touch* touch, Event* event) {
 }
 
 void Game::menuCloseCallback(Object* pSender) {
+    /* 
     board->removeFromParentAndCleanup(true);
     board                       =   Board::create();
     board->setPosition(Point(0, 0));
     this->addChild(board);
-    s->state                    =   GameStateDrawBoard;
+    */
+    board->eraseBoard(0.0);
+    s->state                    =   GameStateWipeBoard;
     s->reset();
 }
 

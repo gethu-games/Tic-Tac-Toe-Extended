@@ -34,7 +34,9 @@ State *State::getShared() {
 }
 
 void State::init() {
-    CCLog("STATE :: INIT");
+    CCLog("STATE :: INIT 2");
+    highlightTiles              =   PointArray::create(20);
+    highlightTiles->retain();
     tiles                       =   (TileState **)malloc(9 * sizeof(TileState *));
     for (int i = 0; i < 9; i++) {
         tiles[i]                =   (TileState *)malloc(9 * sizeof(TileState));
@@ -42,7 +44,7 @@ void State::init() {
 }
 
 void State::reset() {
-    CCLog("STATE :: RESET");
+    CCLog("STATE :: RESET 1");
     for (int i = 0; i < 9; i++) {
         memset(tiles[i], 0, 9 * sizeof(TileState));
     }
