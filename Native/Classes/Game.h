@@ -64,8 +64,6 @@ public:
     
     virtual void                    onExit();
 
-    virtual void                    update(float dt);
-
 
     /***********************
      *** TOUCH FUNCTIONS ***

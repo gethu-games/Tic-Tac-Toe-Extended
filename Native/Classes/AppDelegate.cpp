@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "MenuScene.h"
 #include "Game.h"
+#include "GameMenu.h"
 #include "State.h"
 
 USING_NS_CC;
@@ -37,7 +38,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto scene = Scene::create();
 
     //scene->addChild(MenuScene::create());
-    scene->addChild(Game::create());
+    scene->addChild(GameMenu::create());
 
     // run
     director->runWithScene(scene);

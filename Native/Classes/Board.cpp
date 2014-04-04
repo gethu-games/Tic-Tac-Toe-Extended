@@ -323,8 +323,9 @@ bool Board::init() {
     offset                      =   Point(visibleSize.width * 0.12, visibleSize.height * 0.3);
 
     Sprite *bg                  =   Sprite::create("boardBG.jpg");
-    bg->setPosition(Point(visibleSize.width * 0.5, visibleSize.height * 0.5));
-    bg->setScale(visibleSize.height / bg->getContentSize().height);
+    bg->setAnchorPoint(Point(0.5, 1));
+    bg->setPosition(Point(visibleSize.width * 0.5, visibleSize.height));
+    bg->setScale(visibleSize.width / bg->getContentSize().width);
     this->addChild(bg);
 
     // BUG: scales up in y-axis when equal sizes are given for width and height
@@ -348,6 +349,5 @@ bool Board::init() {
 }
 
 Board::~Board() {
-    chalkBrush->release();
-    duster->release();
+//    chalkBrush->release();
 }

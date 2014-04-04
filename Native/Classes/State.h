@@ -68,9 +68,6 @@ public:
     // indices of the selected tile like (3, 4), (0, 1)
     int                             selectedTileX, selectedTileY;
 
-    // indices of the AI Move tile
-    int                             aiTileX, aiTileY;
-
     // number of consecutive tiles that awards points
     int                             scoreTileLength;
 
@@ -82,6 +79,12 @@ public:
 
     // tiles to cut through
     PointArray                      *highlightTiles;
+
+    // if the game is versus AI
+    bool                            isAI;
+
+    // indices of the AI Move tile
+    int                             aiTileX, aiTileY;
     
 
 

@@ -18,6 +18,7 @@ along with Tic Tac Toe Extended.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Game.h"
+#include "GameMenu.h"
 
 USING_NS_CC;
     
@@ -67,10 +68,6 @@ void Game::onExit() {
 
 }
 
-void Game::update(float dt) {
-
-}
-
 bool Game::onTouchBegan(Touch* touch, Event* event) { 
     return                          true;
 }
@@ -78,8 +75,16 @@ bool Game::onTouchBegan(Touch* touch, Event* event) {
 void Game::onTouchEnded(Touch* touch, Event* event) {
     auto location               =   touch->getLocation();
 
-    if (!(s->state == GameStateWaitingForP1 || s->state == GameStateWaitingForP2)) {
-        return;
+    CCLog("Game State %d", s->state);
+
+    if (s->isAI) {
+        if (!s->state == GameStateWaitingForP1) {
+            return;
+        }
+    } else {
+        if (!(s->state == GameStateWaitingForP1 || s->state == GameStateWaitingForP2)) {
+            return;
+        }
     }
 
     auto tile                   =   board->convertScreenPixelToTile(location);
@@ -106,11 +111,9 @@ void Game::onTouchEnded(Touch* touch, Event* event) {
 
             //s->printTilesState();
 
-            /*
-            if (true) {
+            if (s->isAI) {
                 this->scheduleOnce(schedule_selector(Game::aiMove), 2);
             }
-            */
         }
     }
 
@@ -122,10 +125,17 @@ void Game::menuCloseCallback(Object* pSender) {
     board                       =   Board::create();
     board->setPosition(Point(0, 0));
     this->addChild(board);
-    */
+
     board->eraseBoard(0.0);
     s->state                    =   GameStateWipeBoard;
     s->reset();
+    */
+
+    auto scene                  =   Scene::create();
+    scene->addChild(GameMenu::create());
+
+    Director::getInstance()->replaceScene(scene);
+
 }
 
 // on "init" you need to initialize your instance
@@ -136,8 +146,8 @@ bool Game::init() {
     }
 
     visibleSize                 =   Director::getInstance()->getVisibleSize();
-    Point origin                =   Director::getInstance()->getVisibleOrigin();
     s                           =   State::getShared();
+    s->reset();
     s->state                    =   GameStateDrawBoard;
 
     board                       =   Board::create();
@@ -149,15 +159,13 @@ bool Game::init() {
     ui                          =   UI::create();
     this->addChild(ui);
 
-    this->scheduleUpdate();
-
     auto closeItem = MenuItemImage::create(
                                            "CloseNormal.png",
                                            "CloseSelected.png",
                                            CC_CALLBACK_1(Game::menuCloseCallback, this));
     
-	closeItem->setPosition(Point(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
-                                origin.y + closeItem->getContentSize().height/2));
+	closeItem->setPosition(Point(visibleSize.width - closeItem->getContentSize().width/2 ,
+                                closeItem->getContentSize().height/2));
 
     // create menu, it's an autorelease object
     auto menu = Menu::create(closeItem, NULL);
