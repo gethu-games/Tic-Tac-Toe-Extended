@@ -56,6 +56,17 @@ public:
 
     void                            aiMove(float dt);
 
+    void                            switchToMenu(float dt);
+
+
+    /******************************
+     *** GAME CALLBACK HANDLERS ***
+     ******************************/
+
+    void                            boardEraseComplete();
+
+
+
     /****************************
      *** BASE CLASS FUNCTIONS ***
      ****************************/

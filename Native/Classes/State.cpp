@@ -44,10 +44,14 @@ void State::init() {
 }
 
 void State::reset() {
-    CCLog("STATE :: RESET 1");
+    CCLog("STATE :: RESET");
     for (int i = 0; i < 9; i++) {
-        memset(tiles[i], 0, 9 * sizeof(TileState));
+        for (int j = 0; j < 9; j++) {
+            tiles[i][j]         =   TileStateNone;
+        }
+        //memset(tiles[i], 0, 9 * sizeof(TileState));
     }
+    CCLog("STATE :: RESET END");
 }
 
 void State::printTilesState() {

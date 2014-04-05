@@ -18,6 +18,7 @@ along with Tic Tac Toe Extended.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Board.h"
+#include "Game.h"
 
 USING_NS_CC;
 
@@ -118,8 +119,8 @@ void Board::drawOAt(Point tile) {
 void Board::updateODraw(float dt) {
 
     Point                           pt, center;
-    float                           r = cellSize.width * 0.3;
-    currentLinePercent          +=  0.01 * drawSpeed / 4;
+    float r                     =   cellSize.width * 0.3;
+    currentLinePercent          +=  0.03 * drawSpeed / 4;
 
     center                      =   Point((currentTileToDraw.y + 0.5f) * cellSize.width, (currentTileToDraw.x + 0.5f) * cellSize.height);
     r                           =   cellSize.width * (0.3 - (currentLinePercent - 1.25) * variant1);
@@ -196,12 +197,13 @@ void Board::eraseBoard(float dt) {
     variant2                    =   4 * (2 + rand() % 4);
     this->schedule(schedule_selector(Board::updateErase));
 
-    CCLog("var1 %f, var2 %f", variant1, variant2);
+    //CCLog("var1 %f, var2 %f", variant1, variant2);
 
 }
 
 void Board::updateErase(float dt) {
 
+    CCLog("BOARD :: UPDATE ERASE %f", currentLinePercent);
 
     currentLinePercent          +=  0.1f;
     erasePoint                  +=  Point(variant1, variant2);
@@ -220,11 +222,13 @@ void Board::updateErase(float dt) {
 
     this->eraseBrushAtPoint(erasePoint);
 
-    if (currentLinePercent > 10.0) {
+    if (currentLinePercent > 1.0) {
         CCLog("Erasing Done");
         State::getShared()->state=  GameStateDrawBoard;
         this->unschedule(schedule_selector(Board::updateErase));
-        this->scheduleOnce(schedule_selector(Board::drawBoard), 0.25);
+        if (delegate) {
+            delegate->boardEraseComplete();
+        }
     }
 
 }
@@ -258,6 +262,8 @@ void Board::drawBrushAtPoint(Point pt, bool vertical, int density, Color3B color
 // to calculate the density value dynamically
 void Board::eraseBrushAtPoint(Point pt) {
 
+    return;
+
     texture->begin();
     // calling multiple visit()'s of a single sprite renders only the last visit() call
     // a new Sprite is required for each instance of the brush
@@ -282,16 +288,16 @@ void Board::rescheduleNextStrike() {
 
 Point Board::convertScreenPixelToTile(Point globalPixel) { Point                           tileIndex;
 
-    CCLog("Global %f %f", globalPixel.x, globalPixel.y);
+    //CCLog("Global %f %f", globalPixel.x, globalPixel.y);
 
     Point localPixel            =   texture->convertToNodeSpaceAR(globalPixel);
     Point localPixelAR          =   Point(localPixel.x + visibleSize.width * 0.5, localPixel.y + visibleSize.height * 0.5);
     localPixelAR                =   localPixelAR - offset;
 
-    CCLog("Local %f %f", localPixelAR.x, localPixelAR.y);
+    //CCLog("Local %f %f", localPixelAR.x, localPixelAR.y);
 
     tileIndex                   =   Point( floor(localPixelAR.y / cellSize.height), floor(localPixelAR.x / cellSize.width));
-    CCLog("Tile %f %f", tileIndex.x, tileIndex.y);
+    //CCLog("Tile %f %f", tileIndex.x, tileIndex.y);
 
     if (tileIndex.x < 0 || tileIndex.x > 8 || tileIndex.y < 0 || tileIndex.y > 8)
         tileIndex               =   Point(-1, -1);

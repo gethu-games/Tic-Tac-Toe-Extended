@@ -26,6 +26,8 @@ along with Tic Tac Toe Extended.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace cocos2d;
 
+class Game;
+
 class Board : public Layer {
 public:
 
@@ -72,6 +74,8 @@ public:
     /************************
      *** OTHER COMPONENTS ***
      ************************/
+
+    Game                            *delegate;
 
     Sprite                          *chalk;
 

@@ -82,6 +82,8 @@ void GameMenu::musicToggleHandler(Object *pSender) {
 
 bool GameMenu::init() {
 
+    CCLog("GAME MENU :: INIT");
+
     if ( !Layer::init() ) {
         return false;
     }
@@ -116,6 +118,11 @@ bool GameMenu::init() {
     sprite->setPosition(Point(visibleSize.width/2, visibleSize.height));
     sprite->setScale(visibleSize.width / sprite->getContentSize().width);
     this->addChild(sprite, 0);
+
+    CCLog("GAME MENU :: INIT END");
     
     return true;
+}
+
+GameMenu::~GameMenu() {
 }

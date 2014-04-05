@@ -45,6 +45,27 @@ void Game::aiMove(float dt) {
 
 }
 
+void Game::switchToMenu(float dt) {
+
+    CCLog("GAME :: SWITCH TO MENU");
+
+    auto scene                  =   Scene::create();
+    scene->addChild(GameMenu::create());
+
+    Director::getInstance()->replaceScene(scene);
+
+}
+
+
+/******************************
+ *** GAME CALLBACK HANDLERS ***
+ ******************************/
+
+void Game::boardEraseComplete() {
+    CCLog("GAME :: BOARD ERASE COMPLETE");
+    this->switchToMenu(0.0f);
+}
+
 
 
 /****************************
@@ -76,9 +97,10 @@ void Game::onTouchEnded(Touch* touch, Event* event) {
     auto location               =   touch->getLocation();
 
     CCLog("Game State %d", s->state);
+    CCLog("is AI %d", s->isAI);
 
     if (s->isAI) {
-        if (!s->state == GameStateWaitingForP1) {
+        if (s->state != GameStateWaitingForP1) {
             return;
         }
     } else {
@@ -120,21 +142,18 @@ void Game::onTouchEnded(Touch* touch, Event* event) {
 }
 
 void Game::menuCloseCallback(Object* pSender) {
-    /* 
+
+    CCLog("GAME :: MENU CLOSE CALLBACK");
+    /*
     board->removeFromParentAndCleanup(true);
     board                       =   Board::create();
     board->setPosition(Point(0, 0));
     this->addChild(board);
+    */
 
     board->eraseBoard(0.0);
     s->state                    =   GameStateWipeBoard;
     s->reset();
-    */
-
-    auto scene                  =   Scene::create();
-    scene->addChild(GameMenu::create());
-
-    Director::getInstance()->replaceScene(scene);
 
 }
 
@@ -151,6 +170,7 @@ bool Game::init() {
     s->state                    =   GameStateDrawBoard;
 
     board                       =   Board::create();
+    board->delegate             =   this;
     board->setPosition(Point(0, 0));
     this->addChild(board);
 

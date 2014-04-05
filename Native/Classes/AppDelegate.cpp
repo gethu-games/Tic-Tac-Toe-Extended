@@ -14,6 +14,8 @@ AppDelegate::~AppDelegate()
 {
 }
 
+
+
 bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
     auto director = Director::getInstance();
@@ -26,7 +28,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     //auto screenSize = EGLView::getInstance()->getFrameSize();
     auto designSize = Size(480, 640);
-    glview->setDesignResolutionSize(designSize.width, designSize.height, ResolutionPolicy::NO_BORDER);
+    glview->setDesignResolutionSize(designSize.width, designSize.height, ResolutionPolicy::FIXED_WIDTH);
 	
     // turn on display FPS
     director->setDisplayStats(true);

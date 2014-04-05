@@ -75,6 +75,8 @@ public:
      ************************/
 
     virtual bool                    init();  
+
+    ~GameMenu();
     
     CREATE_FUNC(GameMenu);
 

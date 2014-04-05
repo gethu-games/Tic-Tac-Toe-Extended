@@ -12,7 +12,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/Config.cpp \
                    ../../Classes/Game.cpp \
                    ../../Classes/Logic.cpp \
-                   ../../Classes/MenuScene.cpp \
+                   ../../Classes/GameMenu.cpp \
                    ../../Classes/State.cpp \
                    ../../Classes/UI.cpp
 
