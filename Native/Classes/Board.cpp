@@ -243,7 +243,7 @@ void Board::drawBrushAtPoint(Point pt, bool vertical, int density, Color3B color
         // a new Sprite is required for each instance of the brush
         // This was only in cocos2dx 3.0
         // http://www.cocos2d-x.org/forums/6/topics/43886?r=43899
-        chalkBrush              =   Sprite::create("chalkBrush.png");
+        chalkBrush              =   Sprite::createWithSpriteFrameName("chalkBrush.png");
         chalkBrush->setColor(color);
         chalkBrush->setRotation(std::rand() % 180);
         if (vertical) {
@@ -269,7 +269,7 @@ void Board::eraseBrushAtPoint(Point pt) {
     // a new Sprite is required for each instance of the brush
     // This was only in cocos2dx 3.0
     // http://www.cocos2d-x.org/forums/6/topics/43886?r=43899
-    chalkBrush                  =   Sprite::create("chalkBrush.png");
+    chalkBrush                  =   Sprite::createWithSpriteFrameName("chalkBrush.png");
     chalkBrush->setScale(40.0);
     chalkBrush->setRotation(std::rand() % 180);
     chalkBrush->setPosition(offset + pt);
@@ -328,6 +328,11 @@ bool Board::init() {
     cellSize                    =   Size(boardSpace.width / colCount, boardSpace.height / rowCount);
     offset                      =   Point(visibleSize.width * 0.12, visibleSize.height * 0.3);
 
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("boardSheet.plist");
+
+    batchNode                   =   SpriteBatchNode::create("boardSheet.png");
+    this->addChild(batchNode, 1);
+
     Sprite *bg                  =   Sprite::create("boardBG.jpg");
     bg->setAnchorPoint(Point(0.5, 1));
     bg->setPosition(Point(visibleSize.width * 0.5, visibleSize.height));
@@ -339,15 +344,15 @@ bool Board::init() {
     texture->setPosition(Point(visibleSize.width * 0.5, visibleSize.height * 0.5));
     this->addChild(texture);
 
-    chalk                       =   Sprite::create("chalk.png");
-    this->addChild(chalk);
+    chalk                       =   Sprite::createWithSpriteFrameName("chalk.png");
+    batchNode->addChild(chalk);
 
-    chalkBrush                  =   Sprite::create("chalkBrush.png");
+    chalkBrush                  =   Sprite::createWithSpriteFrameName("chalkBrush.png");
     chalkBrush->retain();
 
-    duster                      =   Sprite::create("duster.png");
+    duster                      =   Sprite::createWithSpriteFrameName("duster.png");
     duster->setScale(0.5f);
-    this->addChild(duster);
+    batchNode->addChild(duster);
 
     this->scheduleOnce(schedule_selector(Board::drawBoard), 0.5);
 

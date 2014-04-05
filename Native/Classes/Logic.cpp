@@ -179,6 +179,8 @@ void Logic::calculateScore() {
 
 void Logic::aiMove() {
 
+    CCLog("LOGIC :: AI MOVE");
+
     Config                          *c;
     State                           *s;
     int                             **scoreTile;
@@ -195,7 +197,7 @@ void Logic::aiMove() {
         }
     }
 
-    //console.log("left to right");
+    CCLog("left to right");
     // checking consecutive tiles in current row from left to right
     for (int i = 0; i < c->rowCount; i++) {
         weight = 0;
@@ -213,7 +215,7 @@ void Logic::aiMove() {
         }
     }
 
-    //console.log("right to left");
+    CCLog("right to left");
     // checking consecutive tiles in current row from right to left
     for (int i = 0; i < c->rowCount; i++) {
         weight = 0;
@@ -232,7 +234,7 @@ void Logic::aiMove() {
         }
     }
 
-    //console.log("top to bottom");
+    CCLog("top to bottom");
     // checking consecutive tiles in current col from top to bottom
     for (int  j = 0; j < c->colCount; j++) {
         weight = 0;
@@ -251,6 +253,7 @@ void Logic::aiMove() {
         }
     }
 
+    CCLog("bottom to top");
     // checking consecutive tiles in current col from bottom to top
     for (int  j = 0; j < c->colCount; j++) {
         weight = 0;
@@ -269,7 +272,7 @@ void Logic::aiMove() {
         }
     }
 
-
+    CCLog("top left to bottom right");
     // checking consecutive tiles in diagonal from top left to bottom right
     for (int i = 0; i < c->rowCount; i++) {
         int k = i;
@@ -315,7 +318,7 @@ void Logic::aiMove() {
         }
     }
 
-
+    CCLog("bottom right to top left");
     // checking consecutive tiles in diagonal from bottom right to top left
     weight = 0;
     for (int i = c->rowCount - 1; i >= 0; i--)
@@ -369,7 +372,7 @@ void Logic::aiMove() {
         }
     }
 
-
+    CCLog("top right to bottom left");
     // checking consecutive tiles in diagonal from top right to bottom left
     weight = 0;
     for (int i = 0; i < c->rowCount; i++)
@@ -419,7 +422,7 @@ void Logic::aiMove() {
         }
     }
 
-
+    CCLog("bottom left to top right");
     // checking consecutive tiles in diagonal from bottom left to top right
     weight = 0;
     for (int i = c->rowCount - 1; i >= 0; i--)

@@ -77,6 +77,8 @@ public:
 
     Game                            *delegate;
 
+    SpriteBatchNode                 *batchNode;
+
     Sprite                          *chalk;
 
     Sprite                          *chalkBrush;

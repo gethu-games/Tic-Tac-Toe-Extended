@@ -28,6 +28,9 @@ USING_NS_CC;
  **********************/
 
 void Game::aiMove(float dt) {
+
+    CCLog("GAME :: AIMOVE");
+
     Logic::getShared()->aiMove();
 
     s->state                    =   GameStateP1Move;
@@ -113,6 +116,7 @@ void Game::onTouchEnded(Touch* touch, Event* event) {
 
     if (tile.x != -1) {
         if (s->tiles[(int)tile.x][(int)tile.y] == TileStateNone) {
+            CCLog("Valid Move");
             s->selectedTileX    =   tile.x;
             s->selectedTileY    =   tile.y;
             if ( s->state == GameStateWaitingForP1) {
@@ -134,6 +138,7 @@ void Game::onTouchEnded(Touch* touch, Event* event) {
             //s->printTilesState();
 
             if (s->isAI) {
+                CCLog("scheduling AI Move");
                 this->scheduleOnce(schedule_selector(Game::aiMove), 2);
             }
         }
