@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "MenuScene.h"
+#include "HelloWorldScene.h"
 #include "Game.h"
 #include "GameMenu.h"
 #include "State.h"
@@ -13,8 +13,6 @@ AppDelegate::AppDelegate() {
 AppDelegate::~AppDelegate() 
 {
 }
-
-
 
 bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
@@ -33,13 +31,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // turn on display FPS
     director->setDisplayStats(true);
 
+    // turn on display FPS
+    director->setDisplayStats(true);
+
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
     auto scene = Scene::create();
 
-    //scene->addChild(MenuScene::create());
     scene->addChild(GameMenu::create());
 
     // run

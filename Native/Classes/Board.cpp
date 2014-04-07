@@ -222,7 +222,7 @@ void Board::updateErase(float dt) {
 
     this->eraseBrushAtPoint(erasePoint);
 
-    if (currentLinePercent > 1.0) {
+    if (currentLinePercent > 10.0) {
         CCLog("Erasing Done");
         State::getShared()->state=  GameStateDrawBoard;
         this->unschedule(schedule_selector(Board::updateErase));
@@ -261,8 +261,6 @@ void Board::drawBrushAtPoint(Point pt, bool vertical, int density, Color3B color
 // TODO: Yet to test in different screens size and varying FPS and probably need
 // to calculate the density value dynamically
 void Board::eraseBrushAtPoint(Point pt) {
-
-    return;
 
     texture->begin();
     // calling multiple visit()'s of a single sprite renders only the last visit() call
