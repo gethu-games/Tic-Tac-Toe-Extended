@@ -28,7 +28,6 @@ State *State::getShared() {
         //instance                =   State::create();
         instance                =   new State();
         instance->init();
-        instance->reset();
     }
     return                          instance;
 }
@@ -64,7 +63,7 @@ void State::printTilesState() {
             sprintf(buff, "%s %d", buff, (int)tiles[i][j]);
         }
         CCLog("%s", buff);
-        sprintf(buff, "");
+        sprintf(buff, " ");
     }
 
 }

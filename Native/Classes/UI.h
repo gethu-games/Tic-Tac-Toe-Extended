@@ -53,6 +53,8 @@ public:
 
     void                            updateUI();
 
+    void                            showGameOver();
+
 
 
     /************************

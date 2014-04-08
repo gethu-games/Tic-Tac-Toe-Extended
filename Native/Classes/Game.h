@@ -56,6 +56,8 @@ public:
 
     void                            aiMove(float dt);
 
+    void                            markTileAndSwitchTurn(Point tile);
+
     void                            switchToMenu(float dt);
 
 

@@ -109,10 +109,16 @@ void Board::updateXDraw(float dt) {
 
 void Board::drawOAt(Point tile) {
 
+    CCLog("BOARD :: DRAW O AT");
+
     currentLinePercent          =   0.75;
     currentTileToDraw           =   tile;
+    CCLog("BOARD :: DRAW O AT 1");
     variant1                    =   (std::rand() % 10) / 50.0;
+    CCLog("BOARD :: DRAW O AT 2");
     this->schedule(schedule_selector(Board::updateODraw));
+
+    CCLog("BOARD :: DRAW O AT 3");
 
 }
 
@@ -226,6 +232,7 @@ void Board::updateErase(float dt) {
         CCLog("Erasing Done");
         State::getShared()->state=  GameStateDrawBoard;
         this->unschedule(schedule_selector(Board::updateErase));
+        texture->removeFromParentAndCleanup(true);
         if (delegate) {
             delegate->boardEraseComplete();
         }

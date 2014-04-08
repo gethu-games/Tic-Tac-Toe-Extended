@@ -31,12 +31,11 @@ using namespace cocos2d;
 class Config {
 public:
 
-    int                             rowCount = 9;
+    int                             rowCount = 5;
     
-    int                             colCount = 9;
+    int                             colCount = 5;
 
-    int                             scoreTile = 4;
-
+    int                             scoreTile = 3; 
 
     /************************
      *** OBJECT LIFECYCLE ***

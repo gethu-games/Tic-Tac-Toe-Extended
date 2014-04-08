@@ -29,7 +29,8 @@ typedef enum {
     GameStateP1Move,
     GameStateWaitingForP2,
     GameStateP2Move,
-    GameStateWipeBoard
+    GameStateWipeBoard,
+    GameStateOver
 } GameState;
 
 typedef enum {

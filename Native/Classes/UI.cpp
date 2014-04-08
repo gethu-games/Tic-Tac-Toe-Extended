@@ -36,6 +36,16 @@ void UI::updateUI() {
 
 }
 
+void UI::showGameOver() {
+
+    Label *overLabel            =   Label::createWithBMFont("tempFont.fnt", "Game Over");
+    overLabel->setPosition(Point(visibleSize.width * 0.5, visibleSize.height * 0.5));
+    overLabel->setScale(0.1); 
+    overLabel->runAction(ScaleTo::create(1.0, 1.0));
+    this->addChild(overLabel);
+
+}
+
 
 
 /************************

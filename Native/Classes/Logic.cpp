@@ -33,18 +33,29 @@ void Logic::calculateScore() {
     State                           *s;
     bool                            isHightlight;
 
+    CCLog("LOGIC :: CALCULATE SCORE");
+
     c                           =   Config::getShared();
     s                           =   State::getShared();
+    CCLog("LOGIC :: CALCULATE SCORE 1");
     isScoreMove                 =   false;
     p1                          =   0;
     p2                          =   0;
+    CCLog("LOGIC :: CALCULATE SCORE 2");
     block                       =   c->scoreTile;
+    CCLog("LOGIC :: CALCULATE SCORE 3");
+    tileArray                   =   PointArray::create(8);
+    CCLog("LOGIC :: CALCULATE SCORE 4");
 
     for (int i = 0; i < c->rowCount; i++) {
         for (int j = 0; j < c->colCount; j++) {
             int                     count;
+            CCLog("%d %d", i, j);
+            CCLog("Step 0");
             TileState cTile     =   s->tiles[i][j]; 
-            tileArray           =   PointArray::create(10);
+
+            CCLog("step 1");
+            //CCLog(" --> %d", (int)cTile );
 
             //check if the current tile is not blank
             if (cTile != TileStateNone) {
@@ -53,14 +64,17 @@ void Logic::calculateScore() {
                 count           =   0;
                 tileArrayCount  =   0;
                 isHightlight    =   false;
-                tileArray       =   PointArray::create(4);
+                CCLog("step 2");
                 for (int z = j; z < j + block && z < c->colCount; z++) {
                     if(s->selectedTileX == i && s->selectedTileY == z)
                         isHightlight            =   true;
+                    CCLog("step 2.1 %d", z);
                     tileArray->addControlPoint(Point(i, z));
+                    CCLog("step 2.2 %d", z);
                     if (TileStateX == s->tiles[i][z])        count++;
                     else if (TileStateO == s->tiles[i][z])   count--;
                     else break;
+                    CCLog("step 2.3 %d", z);
                 }
                 if (count == block) {
                     p1++;
@@ -68,6 +82,10 @@ void Logic::calculateScore() {
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(0));
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(tileArray->count() - 1));
                     }
+                    int tileCount = tileArray->count();
+                    for(int tt = tileCount - 1; tt >= 0; tt--) {
+                        tileArray->removeControlPointAtIndex(tt);
+                    } 
                 }
                 if (count == -block) {
                     p2++;
@@ -75,6 +93,10 @@ void Logic::calculateScore() {
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(0));
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(tileArray->count() - 1));
                     }
+                    int tileCount = tileArray->count();
+                    for(int tt = tileCount - 1; tt >= 0; tt--) {
+                        tileArray->removeControlPointAtIndex(tt);
+                    } 
                 }
 
                 //count the states of cells in the next 'block' tiles in the current column
@@ -82,6 +104,7 @@ void Logic::calculateScore() {
                 tileArrayCount  =   0;
                 isHightlight    =   false;
                 tileArray       =   PointArray::create(4);
+                CCLog("step 3");
                 for (int z = i; z < i + block && z < c->rowCount; z++) {
                     if(s->selectedTileX == z && s->selectedTileY == j)
                         isHightlight            =   true;
@@ -96,6 +119,10 @@ void Logic::calculateScore() {
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(0));
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(tileArray->count() - 1));
                     }
+                    int tileCount = tileArray->count();
+                    for(int tt = tileCount - 1; tt >= 0; tt--) {
+                        tileArray->removeControlPointAtIndex(tt);
+                    } 
                 }
                 if (count == -block) {
                     p2++;
@@ -103,6 +130,10 @@ void Logic::calculateScore() {
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(0));
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(tileArray->count() - 1));
                     }
+                    int tileCount = tileArray->count();
+                    for(int tt = tileCount - 1; tt >= 0; tt--) {
+                        tileArray->removeControlPointAtIndex(tt);
+                    } 
                 }
 
                 //count the number of 0s and 1s in the straight diagonal
@@ -110,6 +141,7 @@ void Logic::calculateScore() {
                 tileArrayCount  =   0;
                 isHightlight    =   false;
                 tileArray       =   PointArray::create(4);
+                CCLog("step 4");
                 for (int z = 0; z < block; z++) {
                     if(s->selectedTileX == z+i && s->selectedTileY == z+j)
                         isHightlight            =   true;
@@ -126,6 +158,10 @@ void Logic::calculateScore() {
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(0));
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(tileArray->count() - 1));
                     }
+                    int tileCount = tileArray->count();
+                    for(int tt = tileCount - 1; tt >= 0; tt--) {
+                        tileArray->removeControlPointAtIndex(tt);
+                    } 
                 }
                 if (count == -block) {
                     p2++;
@@ -133,6 +169,10 @@ void Logic::calculateScore() {
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(0));
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(tileArray->count() - 1));
                     }
+                    int tileCount = tileArray->count();
+                    for(int tt = tileCount - 1; tt >= 0; tt--) {
+                        tileArray->removeControlPointAtIndex(tt);
+                    } 
                 }
 
                 //count the number of 0s and 1s in the reverse diagonal
@@ -140,6 +180,7 @@ void Logic::calculateScore() {
                 tileArrayCount  =   0;
                 isHightlight    =   false;
                 tileArray       =   PointArray::create(4);
+                CCLog("step 5");
                 for (int z = 0; z < block; z++) {
                     if(s->selectedTileX == i-z && s->selectedTileY == z+j)
                         isHightlight            =   true;
@@ -156,6 +197,10 @@ void Logic::calculateScore() {
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(0));
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(tileArray->count() - 1));
                     }
+                    int tileCount = tileArray->count();
+                    for(int tt = tileCount - 1; tt >= 0; tt--) {
+                        tileArray->removeControlPointAtIndex(tt);
+                    } 
                 }
                 if (count == -block) {
                     p2++;
@@ -163,6 +208,10 @@ void Logic::calculateScore() {
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(0));
                         s->highlightTiles->addControlPoint(tileArray->getControlPointAtIndex(tileArray->count() - 1));
                     }
+                    int tileCount = tileArray->count();
+                    for(int tt = tileCount - 1; tt >= 0; tt--) {
+                        tileArray->removeControlPointAtIndex(tt);
+                    } 
                 }
 
             }
@@ -511,6 +560,22 @@ void Logic::aiMove() {
     s->selectedTileY = bestTileJ;
 
     CCLog("Selected Tile: %d %d", bestTileI, bestTileJ);
+
+}
+
+bool Logic::isGameOver() {
+    Config *c                   =   Config::getShared();
+    State *s                    =   State::getShared();
+
+    for (int i = 0; i < c->rowCount; i++) {
+        for (int j = 0; j < c->colCount; j++) {
+            if ( s->tiles[i][j] == TileStateNone ) {
+                return              false;
+            }
+        }
+    }
+
+    return                          true;
 
 }
 

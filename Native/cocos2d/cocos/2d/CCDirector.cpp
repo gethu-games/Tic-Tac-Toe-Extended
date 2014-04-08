@@ -177,7 +177,6 @@ Director::~Director(void)
     CC_SAFE_RELEASE(_notificationNode);
     CC_SAFE_RELEASE(_scheduler);
     CC_SAFE_RELEASE(_actionManager);
-    CC_SAFE_RELEASE(_eventDispatcher);
 
     delete _eventAfterUpdate;
     delete _eventAfterDraw;
@@ -185,6 +184,7 @@ Director::~Director(void)
     delete _eventProjectionChanged;
 
     delete _renderer;
+    CC_SAFE_RELEASE(_eventDispatcher); //http://www.cocos2d-x.org/issues/4568
 
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT) && (CC_TARGET_PLATFORM != CC_PLATFORM_WP8)
     delete _console;

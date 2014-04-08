@@ -38,6 +38,10 @@ public:
 
     void                            aiMove();
 
+    bool                            isGameOver();
+
+
+
     /************************
      *** OBJECT LIFECYCLE ***
      ************************/

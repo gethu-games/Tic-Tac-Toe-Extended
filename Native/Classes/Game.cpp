@@ -33,8 +33,11 @@ void Game::aiMove(float dt) {
 
     Logic::getShared()->aiMove();
 
+    CCLog("GAME :: AIMOVE 2");
+
     s->state                    =   GameStateP1Move;
     s->tiles[s->aiTileX][s->aiTileY] = TileStateO;
+    CCLog("GAME :: AIMOVE 3");
     board->drawOAt(Point(s->aiTileX, s->aiTileY));
 
     CCLog("AI Moved at %d %d", s->aiTileX, s->aiTileY);
@@ -45,7 +48,43 @@ void Game::aiMove(float dt) {
     if (s->highlightTiles->count() > 0) {
         board->scheduleOnce(schedule_selector(Board::strikeOutTiles), 1);
     }
+    CCLog("GAME :: AIMOVE END");
 
+}
+
+void Game::markTileAndSwitchTurn(Point tile) {
+
+    if (s->tiles[(int)tile.x][(int)tile.y] == TileStateNone) {
+        CCLog("Valid Move");
+        s->selectedTileX    =   tile.x;
+        s->selectedTileY    =   tile.y;
+        if ( s->state == GameStateWaitingForP1) {
+            s->state        =   GameStateP1Move;
+            s->tiles[(int)tile.x][(int)tile.y] = TileStateX;
+            board->drawXAt(tile);
+        } else if (s->state == GameStateWaitingForP2) {
+            s->state        =   GameStateP2Move;
+            s->tiles[(int)tile.x][(int)tile.y] = TileStateO;
+            board->drawOAt(tile);
+        }
+        Logic::getShared()->calculateScore();
+        ui->updateUI();
+        if (s->highlightTiles->count() > 0) {
+            board->scheduleOnce(schedule_selector(Board::strikeOutTiles), 1);
+        }
+
+        if (s->isAI) {
+            CCLog("scheduling AI Move");
+            this->scheduleOnce(schedule_selector(Game::aiMove), 2);
+        }
+    }
+
+    if (Logic::getShared()->isGameOver()) {
+        s->state            =   GameStateOver;
+        board->eraseBoard(0.0);
+        s->reset();
+        ui->showGameOver();
+    }
 }
 
 void Game::switchToMenu(float dt) {
@@ -57,6 +96,7 @@ void Game::switchToMenu(float dt) {
 
     Director::getInstance()->replaceScene(scene);
 
+    CCLog("GAME :: SWITCH TO MENU END");
 }
 
 
@@ -115,33 +155,7 @@ void Game::onTouchEnded(Touch* touch, Event* event) {
     auto tile                   =   board->convertScreenPixelToTile(location);
 
     if (tile.x != -1) {
-        if (s->tiles[(int)tile.x][(int)tile.y] == TileStateNone) {
-            CCLog("Valid Move");
-            s->selectedTileX    =   tile.x;
-            s->selectedTileY    =   tile.y;
-            if ( s->state == GameStateWaitingForP1) {
-                s->state        =   GameStateP1Move;
-                s->tiles[(int)tile.x][(int)tile.y] = TileStateX;
-                board->drawXAt(tile);
-            } else if (s->state == GameStateWaitingForP2) {
-                s->state        =   GameStateP2Move;
-                s->tiles[(int)tile.x][(int)tile.y] = TileStateO;
-                board->drawOAt(tile);
-            }
-            Logic::getShared()->calculateScore();
-            ui->updateUI();
-            if (s->highlightTiles->count() > 0) {
-                s->highlightTiles->retain();
-                board->scheduleOnce(schedule_selector(Board::strikeOutTiles), 1);
-            }
-
-            //s->printTilesState();
-
-            if (s->isAI) {
-                CCLog("scheduling AI Move");
-                this->scheduleOnce(schedule_selector(Game::aiMove), 2);
-            }
-        }
+        this->markTileAndSwitchTurn(tile);
     }
 
 }
