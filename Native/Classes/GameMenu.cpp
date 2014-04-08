@@ -28,9 +28,46 @@ along with Tic Tac Toe Extended.  If not, see <http://www.gnu.org/licenses/>.
 
 void GameMenu::drawMenuItems(float dt) {
 
+    this->schedule(schedule_selector(GameMenu::updateDrawMenuItems));
+
 }
 
+static int delay = 0;
 void GameMenu::updateDrawMenuItems(float dt) {
+
+    Color4F mask                =   {0, 0, 0, 1};
+    triangle[1].y               -=  c->boardDrawSpeed; 
+    triangle[2].x               +=  c->boardDrawSpeed; 
+    stencil->clear();
+    stencil->drawPolygon(triangle, 3, mask, 0, mask);
+
+    delay++;
+
+    if (delay == 5) {
+        Point                       to;
+        delay = 0;
+
+        if (chalk->getTag() == 0) {
+            chalk->setTag(1); 
+            chalk->stopAllActions();
+            to            =   triangle[1];
+            to.y                -=  c->boardDrawSpeed * 9;
+            chalk->runAction(MoveTo::create(0.1f * (visibleSize.height - to.y) / visibleSize.height, to));
+        } else {
+            chalk->setTag(0); 
+            chalk->stopAllActions();
+            to            =   triangle[2];
+            to.x                +=  c->boardDrawSpeed * 9;
+            chalk->runAction(MoveTo::create(0.1f * to.x / visibleSize.width, to));
+        }
+
+    }
+    //chalk->setPosition(Point(triangle[2].x * 0.5f, (triangle[1].y + visibleSize.height) * 0.5f));
+
+    if (triangle[1].y < -visibleSize.height) {
+        this->unschedule(schedule_selector(GameMenu::updateDrawMenuItems));
+        CCLog("STOP UPDATE MENU");
+    }
 
 }
 
@@ -87,8 +124,32 @@ bool GameMenu::init() {
     if ( !Layer::init() ) {
         return false;
     }
+
+    c                           =   Config::getShared();
     
     visibleSize                 =   Director::getInstance()->getVisibleSize();
+
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("boardSheet.plist");
+
+    auto sprite                 =   Sprite::create("boardBG.jpg");
+    sprite->setAnchorPoint(Point(0.5, 1));
+    sprite->setPosition(Point(visibleSize.width/2, visibleSize.height));
+    sprite->setScale(visibleSize.width / sprite->getContentSize().width);
+    this->addChild(sprite);
+
+    stencil                     =   DrawNode::create();
+    triangle[0]                 =   Point(0, visibleSize.height); 
+    triangle[1]                 =   Point(0, visibleSize.height - 1); 
+    triangle[2]                 =   Point(1, visibleSize.height); 
+
+    Color4F mask = {0, 0, 0, 1};
+    stencil->drawPolygon(triangle, 3, mask, 0, mask);
+    stencil->setPosition(Point(0, 0));
+    
+    ClippingNode *clipNode      =   ClippingNode::create();
+    clipNode->setInverted(false);
+    clipNode->setStencil(stencil);
+    this->addChild(clipNode, 1);
 
     MenuItemFont::setFontName("pastel.ttf");
     MenuItemFont::setFontSize(visibleSize.height * 0.05);
@@ -112,13 +173,16 @@ bool GameMenu::init() {
 
     auto menu                   =   Menu::create(vsHumanItem, vsSystemItem, helpItem, creditsItem, NULL);
     menu->alignItemsVerticallyWithPadding(visibleSize.height * 0.05);
-    this->addChild(menu, 1);
+    clipNode->addChild(menu, 1);
 
-    auto sprite                 =   Sprite::create("boardBG.jpg");
-    sprite->setAnchorPoint(Point(0.5, 1));
-    sprite->setPosition(Point(visibleSize.width/2, visibleSize.height));
-    sprite->setScale(visibleSize.width / sprite->getContentSize().width);
-    this->addChild(sprite, 0);
+    batchNode                   =   SpriteBatchNode::create("boardSheet.png");
+    this->addChild(batchNode, 2);
+
+    chalk                       =   Sprite::createWithSpriteFrameName("chalk.png");
+    chalk->setPosition(triangle[0]);
+    batchNode->addChild(chalk);
+
+    this->scheduleOnce(schedule_selector(GameMenu::drawMenuItems), 0.5);
 
     CCLog("GAME MENU :: INIT END");
     

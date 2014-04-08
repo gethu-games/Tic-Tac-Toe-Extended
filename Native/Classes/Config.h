@@ -37,6 +37,8 @@ public:
 
     int                             scoreTile = 3; 
 
+    float                           boardDrawSpeed = 10.0f;
+
     /************************
      *** OBJECT LIFECYCLE ***
      ************************/

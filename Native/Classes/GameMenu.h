@@ -34,11 +34,19 @@ public:
 
     Config                          *c;
 
+    DrawNode                        *stencil;
+
+    SpriteBatchNode                 *batchNode;
+
+    Sprite                          *chalk;
+
 
 
     /*******************
      *** HELPER VARS ***
      *******************/
+
+    Point                           triangle[3];
 
     Size                            visibleSize;
 
