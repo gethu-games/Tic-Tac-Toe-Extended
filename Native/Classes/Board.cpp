@@ -331,7 +331,7 @@ bool Board::init() {
     rowCount                    =   c->rowCount;
     colCount                    =   c->colCount;
     cellSize                    =   Size(boardSpace.width / colCount, boardSpace.height / rowCount);
-    offset                      =   Point(visibleSize.width * 0.12, visibleSize.height * 0.3);
+    offset                      =   Point(visibleSize.width * 0.12, visibleSize.height - boardSpace.height - visibleSize.width * 0.1);
 
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("boardSheet.plist");
 

@@ -19,6 +19,7 @@ along with Tic Tac Toe Extended.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Game.h"
 #include "GameMenu.h"
+#include "OverScreen.h"
 
 USING_NS_CC;
     
@@ -92,7 +93,7 @@ void Game::switchToMenu(float dt) {
     CCLog("GAME :: SWITCH TO MENU");
 
     auto scene                  =   Scene::create();
-    scene->addChild(GameMenu::create());
+    scene->addChild(OverScreen::create());
 
     Director::getInstance()->replaceScene(scene);
 

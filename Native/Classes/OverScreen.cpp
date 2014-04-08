@@ -17,20 +17,19 @@ You should have received a copy of the GNU General Public License
 along with Tic Tac Toe Extended.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "OverScreen.h"
 #include "GameMenu.h"
 #include "Game.h"
-#include "State.h"
-
 
 /***************************
  *** DRAW THE MENU ITEMS ***
  ***************************/
 
-void GameMenu::drawMenuItems(float dt) {
+void OverScreen::drawMenuItems(float dt) {
 
 }
 
-void GameMenu::updateDrawMenuItems(float dt) {
+void OverScreen::updateDrawMenuItems(float dt) {
 
 }
 
@@ -40,9 +39,7 @@ void GameMenu::updateDrawMenuItems(float dt) {
  *** MENU HANDLERS ***
  *********************/
 
-void GameMenu::vsSystemHandler(Object *pSender) {
-
-    State::getShared()->isAI    =   true;
+void OverScreen::retryHandler(Object *pSender) {
 
     auto scene                  =   Scene::create();
     scene->addChild(Game::create());
@@ -51,27 +48,21 @@ void GameMenu::vsSystemHandler(Object *pSender) {
 
 }
 
-void GameMenu::vsHumanHandler(Object *pSender) {
-
-    State::getShared()->isAI    =   false;
+void OverScreen::homeHandler(Object *pSender) {
 
     auto scene                  =   Scene::create();
-    scene->addChild(Game::create());
+    scene->addChild(GameMenu::create());
 
     Director::getInstance()->replaceScene(scene);
 
 
 }
 
-void GameMenu::helpHandler(Object *pSender) {
+void OverScreen::fbShareHandler(Object *pSender) {
 
 }
 
-void GameMenu::creditsHandler(Object *pSender) {
-
-}
-
-void GameMenu::musicToggleHandler(Object *pSender) {
+void OverScreen::tweetHandler(Object *pSender) {
 
 }
 
@@ -80,9 +71,9 @@ void GameMenu::musicToggleHandler(Object *pSender) {
  *** OBJECT LIFECYCLE ***
  ************************/
 
-bool GameMenu::init() {
+bool OverScreen::init() {
 
-    CCLog("GAME MENU :: INIT");
+    CCLog("OVER SCREEN :: INIT");
 
     if ( !Layer::init() ) {
         return false;
@@ -91,26 +82,25 @@ bool GameMenu::init() {
     visibleSize                 =   Director::getInstance()->getVisibleSize();
 
     MenuItemFont::setFontName("pastel.ttf");
-    MenuItemFont::setFontSize(visibleSize.height * 0.05);
 
-    auto vsHumanItem            =   MenuItemFont::create("vs Human",
+    auto retryItem              =   MenuItemFont::create("retry",
                                                         this,
-                                                        menu_selector(GameMenu::vsHumanHandler));
+                                                        menu_selector(OverScreen::retryHandler));
 
-    auto vsSystemItem           =   MenuItemFont::create("vs System",
+    auto homeItem               =   MenuItemFont::create("home",
                                                          this,
-                                                         menu_selector(GameMenu::vsSystemHandler));
+                                                         menu_selector(OverScreen::homeHandler));
 
-    auto helpItem               =   MenuItemFont::create("Help",
+    auto fbItem                 =   MenuItemFont::create("FB",
                                                          this,
-                                                         menu_selector(GameMenu::helpHandler));
+                                                         menu_selector(OverScreen::fbShareHandler));
 
-    auto creditsItem            =   MenuItemFont::create("Credits",
+    auto tweetItem              =   MenuItemFont::create("Tweet",
                                                          this,
-                                                         menu_selector(GameMenu::creditsHandler));
+                                                         menu_selector(OverScreen::tweetHandler));
 
 
-    auto menu                   =   Menu::create(vsHumanItem, vsSystemItem, helpItem, creditsItem, NULL);
+    auto menu                   =   Menu::create(retryItem, homeItem, fbItem, tweetItem, NULL);
     menu->alignItemsVerticallyWithPadding(visibleSize.height * 0.05);
     this->addChild(menu, 1);
 
@@ -120,10 +110,10 @@ bool GameMenu::init() {
     sprite->setScale(visibleSize.width / sprite->getContentSize().width);
     this->addChild(sprite, 0);
 
-    CCLog("GAME MENU :: INIT END");
+    CCLog("OVER SCREEN :: INIT END");
     
     return true;
 }
 
-GameMenu::~GameMenu() {
+OverScreen::~OverScreen() {
 }
