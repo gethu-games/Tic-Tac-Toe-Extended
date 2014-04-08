@@ -33,8 +33,11 @@ void Game::aiMove(float dt) {
 
     Logic::getShared()->aiMove();
 
+    CCLog("GAME :: AIMOVE 2");
+
     s->state                    =   GameStateP1Move;
     s->tiles[s->aiTileX][s->aiTileY] = TileStateO;
+    CCLog("GAME :: AIMOVE 3");
     board->drawOAt(Point(s->aiTileX, s->aiTileY));
 
     CCLog("AI Moved at %d %d", s->aiTileX, s->aiTileY);
@@ -45,6 +48,7 @@ void Game::aiMove(float dt) {
     if (s->highlightTiles->count() > 0) {
         board->scheduleOnce(schedule_selector(Board::strikeOutTiles), 1);
     }
+    CCLog("GAME :: AIMOVE END");
 
 }
 
